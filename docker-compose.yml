@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  bet-maker:
+    build:
+      context: ./bet-maker
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "main:app",
+        "--reload",
+      ]
+
+  line-provider:
+    build:
+      context: ./line-provider
+    ports:
+      - "8001:8000"
+    networks:
+      - app-network
+    environment:
+      - API_REDIS_HOST=redis
+    depends_on:
+      - redis
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "main:app",
+        "--reload",
+      ]
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis_pass
+      - REDIS_PORT=6379
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
