@@ -1,4 +1,3 @@
-import decimal
 import json
 
 from fastapi import APIRouter, HTTPException

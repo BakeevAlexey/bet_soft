@@ -1,14 +1,10 @@
 import json
 import uuid
-import time
 import decimal
-
-import redis.asyncio as redis
 
 from fastapi import APIRouter
 
 from ..models import Event, Bet
-from ..constant import EventState
 from ..utils import get_redis_connection
 
 
@@ -53,9 +49,6 @@ async def register_bet(event_id: str, amount_of_bet: str) -> list[Bet]:
 @bet_router.get("/history_bet")
 async def history_bet():
     redis_connect = await get_redis_connection()
-
-    # decd43a9-71d7-4516-b5cb-f9b608eddbf2
-    # 7ecf05e6-b6c0-4d4d-9b19-2839767c13b7
 
     events = []
 
